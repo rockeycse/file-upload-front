@@ -20,13 +20,16 @@
 
 <script>
 import axios from "axios";
-
+// import ProgressBar from "vue-simple-progress";
 export default {
+  // components: {
+  //   ProgressBar,
+  // },
   data() {
     return {
       file: "",
       batchDetails: [],
-      progress: null
+      progressDetails: [],
     };
   },
   methods: {
@@ -46,24 +49,15 @@ export default {
         .then((response) => {
           this.batchDetails = response.data;
           if (this.batchDetails.id != null) {
-            
+            this.$emit('batchDetails',response.data);
+            // this.$emit('iSubmit',1);
           }
           // console.log(this.batchDetails.id);
         });
     },
-    getProgress() {
-       setInterval(() => {
-        axios
-              .get(`http://127.0.0.1:8000/api/batch?id=` + this.batchDetails.id)
-              .then((response) => {
-                this.progress = response.data.progress;
-              });
-      }, 3000);
-    },
+    
   },
-  created () {
-	this.getProgress()
-}
+  
 };
 </script>
 

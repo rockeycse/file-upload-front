@@ -1,34 +1,74 @@
 <template>
+  <!-- <script src="path/to/vue.js"></script>
+  <script src="path/to/vue-simple-progress.js"></script> -->
   <div id="">
     <!-- <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> -->
     <!-- <h1>hello</h1> -->
-    <div v-if="!isSummit">
-      <file-upload></file-upload>
+    <div v-if="!isSummit && progressStatus == false">
+      <file-upload @getBatchId="getBatchData"></file-upload>
+    </div>
+     <div v-if="progressStatus == true">
+      <h1>Processing...</h1>
     </div>
 
-    <div v-else>
-      <progress-page></progress-page>
+
+    <div v-if="null != progressData.id">
+      <h1>Progress ({{ progressData.progress }}%)</h1>
+      <!-- <progress-page></progress-page> -->
     </div>
   </div>
   <!-- <router-view/> -->
 </template>
 
 <script>
-import FileUpload from './components/FileUpload.vue'
-import ProgressPage from './components/ProgressPage.vue'
+import axios from "axios";
+import FileUpload from "./components/FileUpload.vue";
+import ProgressPage from "./components/ProgressPage.vue";
+// import ProgressBar from  'vue-simple-progress'
 
 export default {
   data() {
     return {
       loading: true,
-      isSummit: false
+      batchData: [],
+      isSummit: false,
+      progressData: [],
+      progressStatus: false,
     };
   },
   components: {
     FileUpload,
-    ProgressPage
+    ProgressPage,
+    // ProgressBar,
     // Inventory,
+  },
+  methods: {
+    getBatchData(batchData) {
+      this.batchData = batchData;
+      // console.log(this.batchData.id);
+    },
+    getProgress() {
+      setInterval(() => {
+        axios
+          .get(`http://127.0.0.1:8000/api/batch/in-progress`)
+          .then((response) => {
+            // console.log(response.data.progress);
+            // this.isSummit = true;
+            this.progressData = response.data;
+            if (response.data.progress == 100) {
+              clearInterval();
+            }
+            if (response.data.progress > 0) {
+              this.progressStatus = true;
+              this.isSummit = true;
+            }
+          });
+      }, 10000);
+    },
+  },
+  created() {
+    this.getProgress();
   },
 };
 </script>
