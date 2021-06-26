@@ -1,10 +1,37 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="">
+    <!-- <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link> -->
+    <!-- <h1>hello</h1> -->
+    <div v-if="!isSummit">
+      <file-upload></file-upload>
+    </div>
+
+    <div v-else>
+      <progress-page></progress-page>
+    </div>
   </div>
-  <router-view/>
+  <!-- <router-view/> -->
 </template>
+
+<script>
+import FileUpload from './components/FileUpload.vue'
+import ProgressPage from './components/ProgressPage.vue'
+
+export default {
+  data() {
+    return {
+      loading: true,
+      isSummit: false
+    };
+  },
+  components: {
+    FileUpload,
+    ProgressPage
+    // Inventory,
+  },
+};
+</script>
 
 <style lang="scss">
 #app {
