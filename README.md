@@ -1,4 +1,5 @@
 # file-upload-front
+dlownload project from https://github.com/rockeycse/file-upload-front.git or clone
 
 ## Project setup
 ```
